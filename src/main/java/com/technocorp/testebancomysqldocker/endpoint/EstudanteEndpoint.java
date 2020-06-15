@@ -37,10 +37,14 @@ public class EstudanteEndpoint {
             return new ResponseEntity<>(new CustomErrorType("Student not found"), HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping(path="/findByName/{name}")
+    public ResponseEntity<?>findEstudanteByName(@PathVariable String name){
+        return new ResponseEntity<>(estudanteDao.findByNameIgnoreCaseContaining(name),HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Estudante estudante) {
-        return new ResponseEntity<>(estudanteDao.save(estudante), HttpStatus.OK);
+        return new ResponseEntity<>(estudanteDao.save(estudante), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}")
