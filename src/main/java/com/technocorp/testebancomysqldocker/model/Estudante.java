@@ -19,5 +19,5 @@ import static java.util.Arrays.asList;
 public class Estudante extends AbstractEntity {
 //    private int id;
     private String name;
-    
+
 }
