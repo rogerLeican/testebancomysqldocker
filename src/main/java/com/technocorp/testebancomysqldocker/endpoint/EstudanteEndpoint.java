@@ -1,63 +1,64 @@
 package com.technocorp.testebancomysqldocker.endpoint;
 
-import com.technocorp.testebancomysqldocker.error.CustomErrorType;
 import com.technocorp.testebancomysqldocker.model.Estudante;
-import com.technocorp.testebancomysqldocker.repositoy.EstudanteRepository;
+import com.technocorp.testebancomysqldocker.service.EstudanteService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import javax.validation.Valid;
+import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("estudantes")
 public class EstudanteEndpoint {
 
     @Autowired
-    private final EstudanteRepository estudanteDao;
+    private final EstudanteService service;
 
-    public EstudanteEndpoint(EstudanteRepository estudanteDao) {
-        this.estudanteDao = estudanteDao;
-    }
-
-    @GetMapping("/list")
-    public ResponseEntity<?> listAll() {
-        return new ResponseEntity<>(estudanteDao.findAll(), HttpStatus.OK);
+    @GetMapping()
+    public ResponseEntity<Page<Estudante>> listAll(Pageable pageable) {
+        return ResponseEntity.ok(service.listAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEstudanteById(@PathVariable("id") int id) {
+    public ResponseEntity<?> getEstudanteById(@PathVariable long id) {
+        return ResponseEntity.ok(service.findByid(id));
 
-        Optional<Estudante> estudante = estudanteDao.findById((long) id);
-        if (estudanteDao.findById((long) id).isPresent()) {
-            Estudante student = estudanteDao.findById((long) id).get();
-            return new ResponseEntity<>(student, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new CustomErrorType("Student not found"), HttpStatus.NOT_FOUND);
-        }
     }
-    @GetMapping(path="/findByName/{name}")
-    public ResponseEntity<?>findEstudanteByName(@PathVariable String name){
-        return new ResponseEntity<>(estudanteDao.findByNameIgnoreCaseContaining(name),HttpStatus.OK);
+
+    @GetMapping(path = "/find")
+    public ResponseEntity<List<Estudante>> findByNameIgnoreCaseContaining(@RequestParam(value = "name") String name) {
+        return ResponseEntity.ok(service.findByNameIgnoreCaseContaining(name));
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Estudante estudante) {
-        return new ResponseEntity<>(estudanteDao.save(estudante), HttpStatus.CREATED);
+    public ResponseEntity<?> save(@Valid @RequestBody Estudante estudante) {
+        return new ResponseEntity<>(service.save(estudante), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        estudanteDao.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody Estudante estudante) {
-        estudanteDao.save(estudante);
-        //mandar sem o id, esse metodo cria um novo estudante.
+    public ResponseEntity<Void> update(@RequestBody Estudante estudante) {
+        service.update(estudante);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping
+    public ResponseEntity<Void> updatePatch(@RequestBody Estudante estudante) {
+        service.updatePatch(estudante);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
 }

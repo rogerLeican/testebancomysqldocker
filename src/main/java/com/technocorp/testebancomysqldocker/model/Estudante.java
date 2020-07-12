@@ -1,23 +1,31 @@
 package com.technocorp.testebancomysqldocker.model;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
-import static java.util.Arrays.asList;
-
-//@Builder
-//@Data
+@Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @Entity
-public class Estudante extends AbstractEntity {
-//    private int id;
+public class Estudante {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotEmpty(message = " O nome obrigatório")
     private String name;
+    @NotEmpty(message = " O Email é obrigatório")
+    @Email(message = "O email não é valido !")
+    private String email;
 
 }

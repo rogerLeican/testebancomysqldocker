@@ -1,0 +1,46 @@
+server:
+  error:
+    include-stacktrace: always
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/estudantes?useSSL=false
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+
+
+
+
+#spring.datasource.url= jdbc:mysql://localhost:3306/teste
+#spring.datasource.username=root
+#spring.datasource.password=
+#
+#
+#spring.datasource.tomcat.test-while-idle=true
+#spring.datasource.tomcat.validation-query=SELECT 1
+#
+#spring.jpa.show-sql=true
+#
+#spring.jpa.hibernate.ddl-auto=update
+#
+#spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5Dialect
+#
+##spring.datasource.hikari.driver-class-name=com.mysql.cj.jdbc.Driver
+##spring.datasource.name=SpringBootDataSource
+##spring.datasource.type=com.zaxxer.hikari.HikariDataSource
+##spring.datasource.driver-class-name= com.mysql.jdbc.Driver
+
